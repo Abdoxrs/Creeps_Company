@@ -1,4 +1,5 @@
 const Employee = require('../Models/Emps.model');
+const ApiFeatures = require('../utilities/ApiFeatures')
 
 async function createEmp(req, res) {
   try {
@@ -11,8 +12,10 @@ async function createEmp(req, res) {
 
 async function GetAllEmps(req, res) {
   try {
-    const query = Employee.find();
-    
+    const query = Employee.find({});
+    const apiBuild = new ApiFeatures(query,req.query)
+    apiBuild.pagginate();
+    const employees = await query;
     res.status(200).json(employees);
   } catch (error) {
     res.status(500).json({ message: error.message });
