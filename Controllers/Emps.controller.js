@@ -14,9 +14,7 @@ async function GetAllEmps(req, res) {
   try {
     const query = Employee.find({});
     const apiBuild = new ApiFeatures(query, req.query)
-    apiBuild.sort();
-    apiBuild.pagginate();
-    apiBuild.projection();
+    apiBuild.sort().paginate().projection();
     const employees = await apiBuild.dbQuery;
     res.status(200).json(employees);
   } catch (error) {

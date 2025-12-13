@@ -4,7 +4,7 @@ module.exports = class ApiFeatures {
     this.requestQuery = requestQuery;
   }
 
-  pagginate(pageNumber = 1, pageSize = 5) {
+  paginate(pageNumber = 1, pageSize = 5) {
     pageNumber = this.requestQuery.pageNumber || pageNumber;
     pageSize = this.requestQuery.pageSize || pageSize;
     let skip = 0;
@@ -26,4 +26,4 @@ module.exports = class ApiFeatures {
     }
     return this;
   }
-};//projection
+};
