@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
 const Empsrouter = require('./Routers/Emps.router');
+const Depsrouter = require('./Routers/Deps.router');
 const app = express();
 
 // Connect to MongoDB
@@ -16,8 +17,8 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-app.use('/employees',Empsrouter)
-app.use('/departments', )
+app.use('/employees', Empsrouter)
+app.use('/departments', Depsrouter)
 
 const PORT = 3000;
 app.listen(PORT, () => {

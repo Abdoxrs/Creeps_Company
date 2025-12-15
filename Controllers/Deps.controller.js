@@ -1,3 +1,4 @@
+const express = require('express');
 const Department = require('../Models/Deps.model');
 
 async function CreateDepartment(req, res) {
@@ -65,4 +66,13 @@ async function DeleteDepartment(req, res) {
   } catch (error) {
     res.status(505).json({error: error.message})
   }
+}
+
+module.exports = {
+  CreateDepartment, 
+  GetAllDepartments, 
+  GetDepartment, 
+  UpdateDepartment, 
+  DeleteAllDepartments, 
+  DeleteDepartment
 }
