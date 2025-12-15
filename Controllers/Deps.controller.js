@@ -40,3 +40,19 @@ async function UpdateDepartment(req, res) {
     res.status(404).json({ message: error.message });
   }
 }
+
+async function DeleteAllDepartments(req, res) {
+  try {
+    const result = await Department.deleteMany({});
+    res.status(200).json({
+      message: `${result.deletedCount} departments deleted successfully.`,
+      deletedCount: result.deletedCount
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      message: 'Failed to delete departments.',
+      error: error.message
+    });
+  }
+}

@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
 const Empsrouter = require('./Routers/Emps.router');
-const Department = require('../Models/Deps.model');
 const app = express();
 
 // Connect to MongoDB
