@@ -56,3 +56,13 @@ async function DeleteAllDepartments(req, res) {
     });
   }
 }
+
+async function DeleteDepartment(req, res) {
+  try {
+    const  ID = req.params.id;
+    const deletedOne = await Department.findByIdAndDelete(ID);
+    res.status(201).json({ message: "Employee deleted successfully", employee })
+  } catch (error) {
+    res.status(505).json({error: error.message})
+  }
+}
