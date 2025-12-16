@@ -62,7 +62,7 @@ async function DeleteDepartment(req, res) {
   try {
     const  ID = req.params.id;
     const deletedOne = await Department.findByIdAndDelete(ID);
-    res.status(201).json({ message: "Employee deleted successfully", employee })
+    res.status(200).json({ message: "Department deleted successfully", department: deletedOne })
   } catch (error) {
     res.status(505).json({error: error.message})
   }
