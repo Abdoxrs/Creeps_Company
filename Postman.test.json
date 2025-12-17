@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "CRUD API Complete Collection",
+    "description": "Complete CRUD operations for Employees, Departments, Projects, and Dependents",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ssn\": \"123-45-6789\",\n  \"name\": {\n    \"fname\": \"John\",\n    \"minit\": \"A\",\n    \"lname\": \"Doe\"\n  },\n  \"bdate\": \"1990-01-15\",\n  \"address\": \"123 Main St\",\n  \"sex\": \"Male\",\n  \"salary\": 50000\n}"
+            },
+            "url": {"raw": "http://localhost:3000/employees", "host": ["localhost"], "port": "3000", "path": ["employees"]}
+          }
+        },
+        {
+          "name": "Get All Employees",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/employees?pageNumber=1&pageSize=10&sort=salary", "host": ["localhost"], "port": "3000", "path": ["employees"], "query": [{"key": "pageNumber", "value": "1"}, {"key": "pageSize", "value": "10"}, {"key": "sort", "value": "salary"}]}
+          }
+        },
+        {
+          "name": "Get Employee by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/employees/:id", "host": ["localhost"], "port": "3000", "path": ["employees", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"salary\": 60000,\n  \"address\": \"456 Oak Ave\"\n}"
+            },
+            "url": {"raw": "http://localhost:3000/employees/:id", "host": ["localhost"], "port": "3000", "path": ["employees", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:3000/employees/:id", "host": ["localhost"], "port": "3000", "path": ["employees", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Departments",
+      "item": [
+        {
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"number\": 1,\n  \"name\": \"Engineering\",\n  \"locations\": [\"Building A\", \"Building B\"]\n}"
+            },
+            "url": {"raw": "http://localhost:3000/departments", "host": ["localhost"], "port": "3000", "path": ["departments"]}
+          }
+        },
+        {
+          "name": "Get All Departments",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/departments", "host": ["localhost"], "port": "3000", "path": ["departments"]}
+          }
+        },
+        {
+          "name": "Get Department by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/departments/:id", "host": ["localhost"], "port": "3000", "path": ["departments", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Software Engineering\",\n  \"locations\": [\"Building A\", \"Building B\", \"Building C\"]\n}"
+            },
+            "url": {"raw": "http://localhost:3000/departments/:id", "host": ["localhost"], "port": "3000", "path": ["departments", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:3000/departments/:id", "host": ["localhost"], "port": "3000", "path": ["departments", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Web Platform\",\n  \"location\": \"Building A\"\n}"
+            },
+            "url": {"raw": "http://localhost:3000/projects", "host": ["localhost"], "port": "3000", "path": ["projects"]}
+          }
+        },
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/projects?pageNumber=1&pageSize=10", "host": ["localhost"], "port": "3000", "path": ["projects"], "query": [{"key": "pageNumber", "value": "1"}, {"key": "pageSize", "value": "10"}]}
+          }
+        },
+        {
+          "name": "Get Project by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/projects/:id", "host": ["localhost"], "port": "3000", "path": ["projects", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mobile Platform\",\n  \"location\": \"Building B\"\n}"
+            },
+            "url": {"raw": "http://localhost:3000/projects/:id", "host": ["localhost"], "port": "3000", "path": ["projects", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:3000/projects/:id", "host": ["localhost"], "port": "3000", "path": ["projects", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dependents",
+      "item": [
+        {
+          "name": "Create Dependent",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"REPLACE_WITH_EMPLOYEE_ID\",\n  \"name\": \"Jane Doe\",\n  \"sex\": \"Female\",\n  \"birthDate\": \"2015-05-20\",\n  \"relationship\": \"Daughter\"\n}"
+            },
+            "url": {"raw": "http://localhost:3000/dependents", "host": ["localhost"], "port": "3000", "path": ["dependents"]}
+          }
+        },
+        {
+          "name": "Get All Dependents",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/dependents?pageNumber=1&pageSize=10", "host": ["localhost"], "port": "3000", "path": ["dependents"], "query": [{"key": "pageNumber", "value": "1"}, {"key": "pageSize", "value": "10"}]}
+          }
+        },
+        {
+          "name": "Get Dependent by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "http://localhost:3000/dependents/:id", "host": ["localhost"], "port": "3000", "path": ["dependents", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Update Dependent",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"relationship\": \"Child\",\n  \"birthDate\": \"2015-05-21\"\n}"
+            },
+            "url": {"raw": "http://localhost:3000/dependents/:id", "host": ["localhost"], "port": "3000", "path": ["dependents", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        },
+        {
+          "name": "Delete Dependent",
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "http://localhost:3000/dependents/:id", "host": ["localhost"], "port": "3000", "path": ["dependents", ":id"], "variable": [{"key": "id", "value": "REPLACE_WITH_ACTUAL_ID"}]}
+          }
+        }
+      ]
+    }
+  ]
+}
