@@ -92,6 +92,5 @@ export {
   GetAllDepartments, 
   GetDepartment, 
   UpdateDepartment, 
-  DeleteAllDepartments, 
   DeleteDepartment
 };

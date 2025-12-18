@@ -4,7 +4,6 @@ import {
   GetAllDepartments, 
   GetDepartment,
   UpdateDepartment,
-  DeleteAllDepartments, 
   DeleteDepartment
 } from '../Controllers/Deps.controller.js';
 
@@ -17,7 +16,6 @@ router.get('/:id',GetDepartment);
 
 router.patch('/:id',UpdateDepartment);
 
-router.delete('/',DeleteAllDepartments);
 router.delete('/:id',DeleteDepartment)
 
 export default router;
