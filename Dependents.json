@@ -1,0 +1,12 @@
+[
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f101", "name": "Alice Smith", "sex": "Female", "birthDate": "2015-01-10", "relationship": "Daughter"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f101", "name": "Bob Smith", "sex": "Male", "birthDate": "2018-05-15", "relationship": "Son"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f102", "name": "Charlie Johnson", "sex": "Male", "birthDate": "2020-11-20", "relationship": "Son"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f103", "name": "Diana Williams", "sex": "Female", "birthDate": "2012-03-05", "relationship": "Spouse"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f105", "name": "Edward Jones", "sex": "Male", "birthDate": "2010-08-12", "relationship": "Son"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f106", "name": "Fiona Garcia", "sex": "Female", "birthDate": "2021-02-28", "relationship": "Daughter"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f107", "name": "George Miller", "sex": "Male", "birthDate": "2014-06-18", "relationship": "Son"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f109", "name": "Helen Rodriguez", "sex": "Female", "birthDate": "2019-12-30", "relationship": "Daughter"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f110", "name": "Ian Martinez", "sex": "Male", "birthDate": "2022-04-14", "relationship": "Son"},
+  {"employeeId": "6581f1e1f1e1f1e1f1e1f110", "name": "Jane Martinez", "sex": "Female", "birthDate": "1995-07-20", "relationship": "Spouse"}
+]

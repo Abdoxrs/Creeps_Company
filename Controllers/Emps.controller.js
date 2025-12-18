@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Employee from '../Models/Emps.model.js';
 import ApiFeatures from '../utilities/ApiFeatures.js';
 
@@ -69,8 +70,13 @@ async function updateEmp(req, res) {
 
 async function deleteEmp(req, res) {
   try {
-    const ID = req.params.id;
-    const employee = await Employee.findByIdAndDelete(ID);
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid Employee ID format' });
+    }
+
+    const employee = await Employee.findByIdAndDelete(id);
     
     if (!employee) {
       return res.status(404).json({ message: 'Employee not found' });

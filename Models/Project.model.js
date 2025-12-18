@@ -15,6 +15,4 @@ const projectSchema = new mongoose.Schema({
   }
 });
 
-projectSchema.index({ number: 1 });
-
 export default mongoose.model('Project', projectSchema);

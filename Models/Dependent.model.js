@@ -25,7 +25,7 @@ const DependentSchema = new mongoose.Schema({
   },
 });
 
-DependentSchema.index({ employeeId: 1 });
+
 DependentSchema.index({ employeeId: 1, name: 1 }, { unique: true });
 
 export default mongoose.model('Dependent', DependentSchema);
