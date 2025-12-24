@@ -5,10 +5,9 @@ import employeesrouter from './Routers/employees.router.js';
 import departmentsrouter from './Routers/departments.router.js';
 import projectsrouter from './Routers/projects.router.js';
 import dependentsrouter from './Routers/dependents.router.js';
-// import Userrouter from './Routers/Users.router.js'
+import usersrouter from './Routers/users.router.js';
 
 import globalErrorHandler from './utilities/globalErrorHandler.js'
-// ApiError
 
 const app = e();
 
@@ -16,7 +15,7 @@ app.use(morgan("dev"));
 app.use(json({ limit: '10mb' }));
 app.use(urlencoded({ extended: true, limit: '10mb' }));
 
-// app.use('/users', usersrouter)
+app.use('/users', usersrouter)
 app.use('/employees', employeesrouter);
 app.use('/departments', departmentsrouter);
 app.use('/projects', projectsrouter);
