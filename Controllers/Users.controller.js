@@ -1,8 +1,9 @@
-import * as UserService from '../Services/users.service';
+import * as UserService from '../Services/users.service.js';
 
 const CreateUer = async (req, res, next) => {
   const NewUser = await UserService.SignupUser(req.body);
   NewUser.password = undefined;
+  NewUser.passwordConfirmantion = undefined;
   res.status(201).json({
     status: "seccess",
     Message: "user created successfully",
@@ -21,9 +22,12 @@ const Login = async (req, res, next) => {
 
 const FindUser = async (req, res, next) => {
   const TheOne = await UserService.getUserById(req.params.id)
-  req.status(200).json({
+  res.status(200).json({
     status: "Success",
     message: "User Found!!",
     data: TheOne
   })
 }
+
+
+export {CreateUer, Login, FindUser};

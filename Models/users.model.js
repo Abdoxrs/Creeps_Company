@@ -12,14 +12,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    select: false
+    select: false,
+    validate: function (value){
+      return value === this.passwordConfirmantion
+    }
   },
   passwordConfirmantion: {
     type: String,
     required: true,
-    validate: function (value){
-      return value === this.password
-    }
   },
   role: {
     type: String,

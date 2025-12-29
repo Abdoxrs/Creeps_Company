@@ -2,6 +2,7 @@ import User from '../Models/users.model.js'
 import ApiFeatures from '../utilities/ApiFeatures.js'
 import ApiError from '../utilities/ApiError.js'
 import * as jwt from 'jsonwebtoken'
+import * as bcrybt from 'bcrypt'
 
 const SignupUser = (data) => User.create(data);
 
@@ -15,7 +16,7 @@ const LoginUser = async (data) => {
 
   const hashedPassword = userDoc.password;
   const password = data.password;
-  const isTheOne = await bcrypt.compare(password,hashedPassword);
+  const isTheOne = await bcrybt.compare(password,hashedPassword);
   if(!isTheOne){
     throw new ApiError("Wrong email or password, please try again !!", 400);
   }
@@ -30,5 +31,5 @@ const getUserById = (id) => User.findById(id);
 export {
   SignupUser,
   LoginUser,
-  getUserById
+  getUserById,
 }
