@@ -1,6 +1,26 @@
-Test
-Views
-node_modules
-.env
-.env.local
-.env.*.local
+# Dependencies
+node_modules/
+
+# Environment variables (NEVER COMMIT THESE!)
+# .env
+# .env.local
+# .env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build output
+dist/
+build/

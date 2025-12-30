@@ -1,11 +1,10 @@
 import User from '../Models/users.model.js'
-import ApiFeatures from '../utilities/ApiFeatures.js'
 import ApiError from '../utilities/ApiError.js'
 import jwt from 'jsonwebtoken'
 import { compare } from 'bcryptjs'
 import dotenv from 'dotenv';
 
-
+dotenv.config()
 const SignupUser = (data) => User.create(data);
 
 const LoginUser = async (data) => {
