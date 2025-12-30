@@ -1,8 +1,13 @@
 import dotenv from 'dotenv';
+
+// Load environment variables FIRST
 dotenv.config();
 
 import app from "./App.js";
 import connectDB from "./Config/DB.js";
+import validateEnv from "./utilities/validateEnv.js";
+
+validateEnv();
 
 const PORT = process.env.PORT || 3000;
 

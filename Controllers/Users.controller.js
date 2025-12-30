@@ -1,35 +1,70 @@
+import * as UserService from '../Services/users.service.js';
 import asyncHandler from '../utilities/asyncHandler.js';
-import * as userService from '../Services/users.service.js';
-import ApiError from '../utilities/ApiError.js';
 
 const CreateUser = asyncHandler(async (req, res, next) => {
-  const NewUser = await userService.SignupUser(req.body);
+  const NewUser = await UserService.SignupUser(req.body);
   NewUser.password = undefined;
   NewUser.passwordConfirmation = undefined;
   res.status(201).json({
     status: "success",
-    message: "user created successfully",
+    message: "User created successfully",
     data: NewUser
-  });
+  })
 });
 
 const Login = asyncHandler(async (req, res, next) => {
-  const token = await userService.LoginUser(req.body);
+  const token = await UserService.LoginUser(req.body);
   res.status(200).json({
     status: "success",
-    message: "User Logged in successfully",
-    data: { token },
+    message: "User logged in successfully",
+    data: { token }
   });
 });
 
 const FindUser = asyncHandler(async (req, res, next) => {
-  const TheOne = await userService.getUserById(req.params.id);
-  if (!TheOne) throw new ApiError('User not found', 404);
+  const TheOne = await UserService.getUserById(req.params.id)
   res.status(200).json({
     status: "success",
-    message: "User Found!!",
+    message: "User found",
     data: TheOne
+  })
+});
+
+// ✅ New: Update user profile (email, etc.)
+const UpdateUserProfile = asyncHandler(async (req, res, next) => {
+  const updatedUser = await UserService.updateUserProfile(req.params.id, req.body);
+  res.status(200).json({
+    status: "success",
+    message: "Profile updated successfully",
+    data: updatedUser
   });
 });
 
-export { CreateUser, Login, FindUser };
+// ✅ New: Change password
+const ChangePassword = asyncHandler(async (req, res, next) => {
+  const { currentPassword, newPassword, newPasswordConfirmation } = req.body;
+  
+  if (!currentPassword || !newPassword || !newPasswordConfirmation) {
+    throw new ApiError('All password fields are required', 400);
+  }
+  
+  const result = await UserService.updateUserPassword(
+    req.params.id,
+    currentPassword,
+    newPassword,
+    newPasswordConfirmation
+  );
+  
+  res.status(200).json({
+    status: "success",
+    message: result.message
+  });
+});
+
+export { 
+  CreateUser, 
+  Login, 
+  FindUser, 
+  UpdateUserProfile, 
+  ChangePassword 
+};
