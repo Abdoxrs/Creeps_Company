@@ -1,5 +1,5 @@
 import ApiError from '../utilities/ApiError.js'
-import asyncHandler from '../utilities/asyncHandler.js';  // ✅ Import
+import asyncHandler from '../utilities/asyncHandler.js';
 import {
   createDepartment, 
   getDepartments, 
@@ -35,11 +35,10 @@ const UpdateDepartment = asyncHandler(async (req, res) => {
     if (!target) throw new ApiError('Department not found', 404);
     res.status(200).json(target);
   } catch (error) {
-    // Check for MongoDB duplicate key error
     if (error.code === 11000) {
       throw new ApiError('Department number already exists', 409);
     }
-    throw error;  // Re-throw to be caught by asyncHandler
+    throw error;
   }
 });
 

@@ -1,7 +1,8 @@
-# Dependencies
-node_modules/
 
-# Environment variables (NEVER COMMIT THESE!)
+node_modules/
+Test/
+
+
 .env
 .env.local
 .env.*.local

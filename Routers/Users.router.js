@@ -14,8 +14,7 @@ router.post('/login', Login);
 
 router.get('/:id', FindUser);
 
-// ✅ New routes
-router.patch('/:id/profile', UpdateUserProfile);  // Update email, etc.
-router.patch('/:id/password', ChangePassword);     // Change password
+router.patch('/:id/profile', UpdateUserProfile);
+router.patch('/:id/password', ChangePassword);
 
 export default router;

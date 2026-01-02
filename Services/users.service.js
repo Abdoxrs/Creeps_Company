@@ -1,7 +1,7 @@
 import User from '../Models/users.model.js'
 import ApiError from '../utilities/ApiError.js'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
+
 
 const SignupUser = (data) => User.create(data);
 
@@ -33,33 +33,28 @@ const LoginUser = async (data) => {
 
 const getUserById = (id) => User.findById(id);
 
-// ✅ New: Safe password update
+
 const updateUserPassword = async (userId, currentPassword, newPassword, newPasswordConfirmation) => {
-  // Get user with password
   const user = await User.findById(userId).select('+password');
   
   if (!user) {
     throw new ApiError('User not found', 404);
   }
   
-  // Verify current password
   const isPasswordCorrect = await user.comparePassword(currentPassword);
   if (!isPasswordCorrect){
     throw new ApiError('Current password is incorrect', 401);
   }
   
-  // Update password using the instance method
   await user.changePassword(newPassword, newPasswordConfirmation);
   
   return { message: 'Password updated successfully' };
 };
 
-// ✅ New: Safe user profile update (without password)
 const updateUserProfile = async (userId, updates) => {
-  // Remove password fields if accidentally included
   delete updates.password;
   delete updates.passwordConfirmation;
-  delete updates.role;  // Prevent role escalation
+  delete updates.role;
   
   const user = await User.findByIdAndUpdate(
     userId,

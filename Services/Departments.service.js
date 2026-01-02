@@ -14,7 +14,7 @@ const getDepartments = (queryParams) => {
 const getDepartmentById = (id) => Department.findById(id);
 
 const updateDepartment = (id,updated) => {
-  Department.findByIdAndUpdate(id,updated,{ new: true, runValidators: true })
+  return Department.findByIdAndUpdate(id,updated,{ new: true, runValidators: true })
 }
 
 const deleteDepartments = () => Department.deleteMany({})

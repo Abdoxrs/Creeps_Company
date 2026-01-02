@@ -50,7 +50,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// ✅ Add method to change password safely
+
 userSchema.methods.changePassword = async function(newPassword, newPasswordConfirmation) {
   this.password = newPassword;
   this.passwordConfirmation = newPasswordConfirmation;

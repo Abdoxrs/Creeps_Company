@@ -10,7 +10,7 @@ import {
 } from '../Services/employees.service.js';
 import { deleteDependentsByEmployeeId } from '../Services/dependents.service.js';
 
-const createEmp = asyncHandler(async (req, res, next) => {
+const createEmp = asyncHandler(async (req, res) => {
   const employee = await createEmployee(req.body);
   res.status(201).json({
     status: 'success',
@@ -19,32 +19,30 @@ const createEmp = asyncHandler(async (req, res, next) => {
   });
 });
 
-const GetAllEmps = asyncHandler(async (req, res, next) => {
+const GetAllEmps = asyncHandler(async (req, res) => {
   const allEmployees = await getEmployees(req.query);
   res.status(200).json(allEmployees);
 });
 
-const GetEmp = asyncHandler(async (req, res, next) => {
+const GetEmp = asyncHandler(async (req, res) => {
   const matched = await getEmployeeById(req.params.id);
   if (!matched) throw new ApiError('Employee not found', 404);
   res.status(200).json(matched);
 });
 
-const updateEmp = asyncHandler(async (req, res, next) => {
+const updateEmp = asyncHandler(async (req, res) => {
   const target = await updateEmployee(req.params.id, req.body);
   if (!target) throw new ApiError('Employee not found', 404);
   res.status(200).json(target);
 });
 
-const deleteEmp = asyncHandler(async (req, res, next) => {
+const deleteEmp = asyncHandler(async (req, res) => {
   const employee = await getEmployeeById(req.params.id);
   if (!employee) throw new ApiError('Employee not found', 404);
   
-  // ✅ Check query parameter for cascade behavior
   const cascade = req.query.cascade === 'true';
   
   if (cascade) {
-    // Delete employee and all their dependents
     await deleteDependentsByEmployeeId(req.params.id);
     await deleteEmployeeById(req.params.id);
     
@@ -54,7 +52,6 @@ const deleteEmp = asyncHandler(async (req, res, next) => {
       employee
     });
   } else {
-    // Check if employee has dependents
     const hasDependents = await hasEmployeeDependents(req.params.id);
     
     if (hasDependents) {

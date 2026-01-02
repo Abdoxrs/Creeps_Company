@@ -1,7 +1,3 @@
-/**
- * Validates that all required environment variables are present
- * Call this early in your app startup
- */
 const validateEnv = () => {
   const required = [
     'JWT_SECRET',
@@ -17,7 +13,6 @@ const validateEnv = () => {
     process.exit(1);
   }
 
-  // Validate JWT_SECRET strength
   if (process.env.JWT_SECRET.length < 32) {
     console.warn('⚠️  WARNING: JWT_SECRET should be at least 32 characters long');
   }

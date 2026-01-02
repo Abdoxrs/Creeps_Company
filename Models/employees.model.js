@@ -8,7 +8,7 @@ const employeeSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    index: true  // ✅ Index for faster lookups
+    index: true
   },
   name: {
     type: {

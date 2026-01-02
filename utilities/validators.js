@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 import ApiError from './ApiError.js';
 
 /**
- * Validates that a document exists in the database
- * @param {Model} Model - Mongoose model to check
- * @param {ObjectId} id - Document ID to validate
- * @param {string} entityName - Name for error message
- */
+ * @param {Model} Model
+ * @param {ObjectId} id
+ * @param {string} entityName
+*/
+
 export const validateDocumentExists = async (Model, id, entityName = 'Document') => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ApiError(`Invalid ${entityName} ID format`, 400);
@@ -21,11 +21,11 @@ export const validateDocumentExists = async (Model, id, entityName = 'Document')
 };
 
 /**
- * Validates that multiple documents exist
- * @param {Model} Model - Mongoose model to check
- * @param {Array<ObjectId>} ids - Array of document IDs
- * @param {string} entityName - Name for error message
+ * @param {Model} Model
+ * @param {Array<ObjectId>} ids
+ * @param {string} entityName
  */
+
 export const validateDocumentsExist = async (Model, ids, entityName = 'Documents') => {
   const invalidIds = ids.filter(id => !mongoose.Types.ObjectId.isValid(id));
   if (invalidIds.length > 0) {
