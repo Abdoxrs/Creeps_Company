@@ -4,7 +4,6 @@ import { cleanOrphanedDependents } from '../utilities/checkOrphanedData.js';
 
 const router = express.Router();
 
-// ✅ Admin route to check for orphaned data
 router.get('/check-integrity', asyncHandler(async (req, res) => {
   const orphaned = await cleanOrphanedDependents();
   

@@ -43,7 +43,7 @@ const updateUserPassword = async (userId, currentPassword, newPassword, newPassw
   
   const isPasswordCorrect = await user.comparePassword(currentPassword);
   if (!isPasswordCorrect){
-    throw new ApiError('Current password is incorrect', 401);
+    throw new ApiError('Current password is incorrect renter it!!', 401);
   }
   
   await user.changePassword(newPassword, newPasswordConfirmation);

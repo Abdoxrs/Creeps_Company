@@ -1,77 +1,106 @@
-import {
-  SignupUser,
-  LoginUser,
-  getUserById,
-  updateUserPassword,
-  updateUserProfile
-} from '../Services/users.service.js';
+import User from '../Models/users.model.js';
 import ApiError from '../utilities/ApiError.js';
 import asyncHandler from '../utilities/asyncHandler.js';
 
-const CreateUser = asyncHandler(async (req, res) => {
-  const NewUser = await SignupUser(req.body);
-  NewUser.password = undefined;
-  NewUser.passwordConfirmation = undefined;
-  res.status(201).json({
-    status: "success",
-    message: "User created successfully",
-    data: NewUser
-  })
-});
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach(key => {
+    if (allowedFields.includes(key)) {
+      newObj[key] = obj[key];
+    }
+  });
+  return newObj;
+};
 
-const Login = asyncHandler(async (req, res) => {
-  const token = await LoginUser(req.body);
+
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find();
+  
   res.status(200).json({
-    status: "success",
-    message: "User logged in successfully",
-    data: { token }
+    status: 'success',
+    results: users.length,
+    data: users
   });
 });
 
-const FindUser = asyncHandler(async (req, res) => {
-  const TheOne = await getUserById(req.params.id)
+export const getUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  
+  if (!user) {
+    throw new ApiError('User not found', 404);
+  }
+  
   res.status(200).json({
-    status: "success",
-    message: "User found",
-    data: TheOne
-  })
+    status: 'success',
+    data: user
+  });
 });
 
 
-const UpdateUserProfile = asyncHandler(async (req, res) => {
-  const updatedUser = await updateUserProfile(req.params.id, req.body);
+export const getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
+export const updateMe = asyncHandler(async (req, res) => {
+  if (req.body.password || req.body.passwordConfirmation) {
+    throw new ApiError('This route is not for password updates. Please use /update-password', 400);
+  }
+
+  const filteredBody = filterObj(req.body, 'email');
+  
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    filteredBody,
+    { new: true, runValidators: true }
+  );
+
   res.status(200).json({
-    status: "success",
-    message: "Profile updated successfully",
+    status: 'success',
+    message: 'Profile updated successfully',
     data: updatedUser
   });
 });
 
-
-const ChangePassword = asyncHandler(async (req, res) => {
-  const { currentPassword, newPassword, newPasswordConfirmation } = req.body;
+export const deleteMe = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
   
-  if (!currentPassword || !newPassword || !newPasswordConfirmation) {
-    throw new ApiError('All password fields are required', 400);
-  }
-  
-  const result = await updateUserPassword(
-    req.params.id,
-    currentPassword,
-    newPassword,
-    newPasswordConfirmation
-  );
-  
-  res.status(200).json({
-    status: "success",
-    message: result.message
+  res.status(204).json({
+    status: 'success',
+    data: null
   });
 });
 
-export { 
-  CreateUser, 
-  Login, 
-  FindUser, 
-  UpdateUserProfile, 
-  ChangePassword 
-};
+export const updateUser = asyncHandler(async (req, res) => {
+  if (req.body.password || req.body.passwordConfirmation) {
+    throw new ApiError('This route is not for password updates', 400);
+  }
+  
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true, runValidators: true }
+  );
+  
+  if (!user) {
+    throw new ApiError('User not found', 404);
+  }
+  
+  res.status(200).json({
+    status: 'success',
+    data: user
+  });
+});
+
+export const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  
+  if (!user) {
+    throw new ApiError('User not found', 404);
+  }
+  
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});

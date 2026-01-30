@@ -7,17 +7,19 @@ import {
   DeleteDepartments,
   DeleteOneDepartment
 } from '../Controllers/departments.controller.js';
+import { protect, restrictTo } from '../utilities/protect.js';
 
 const router = express.Router();
 
-router.post('/',CreateDepartment);
+router.use(protect);
 
-router.get('/',GetAllDepartments);
-router.get('/:id',GetDepartment);
+router.get('/', GetAllDepartments);
+router.get('/:id', GetDepartment);
 
-router.patch('/:id',UpdateDepartment);
 
-router.delete('/',DeleteDepartments)
-router.delete('/:id',DeleteOneDepartment)
+router.post('/', restrictTo('admin'), CreateDepartment);
+router.patch('/:id', restrictTo('admin'), UpdateDepartment);
+router.delete('/', restrictTo('admin'), DeleteDepartments);
+router.delete('/:id', restrictTo('admin'), DeleteOneDepartment);
 
 export default router;

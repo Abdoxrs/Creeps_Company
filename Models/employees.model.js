@@ -35,13 +35,70 @@ const employeeSchema = new mongoose.Schema({
     min: 0,
     default: 0
   },
+  deptNo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+    index: true
+  },
+  superSsn: {
+    type: String,
+    ref: 'Employee',
+    index: true,
+    validate: {
+      validator: function(value) {
+        return !value || value !== this.ssn;
+      },
+      message: 'An employee cannot supervise themselves'
+    }
+  }
 }, {
-  timestamps: true  // ✅ Add timestamps for better tracking
+  timestamps: true
 });
 
-// ✅ Virtual for full name
+
 employeeSchema.virtual('fullName').get(function() {
   return `${this.name.fname} ${this.name.minit ? this.name.minit + '. ' : ''}${this.name.lname}`;
 });
+
+
+employeeSchema.virtual('subordinates', {
+  ref: 'Employee',
+  localField: 'ssn',
+  foreignField: 'superSsn'
+});
+
+
+employeeSchema.pre('save', async function() {
+  if (this.isModified('superSsn') && this.superSsn && this.deptNo) {
+    const supervisor = await this.constructor.findOne({ ssn: this.superSsn });
+
+    if (!supervisor) {
+      throw new Error('Supervisor does not exist');
+    }
+
+    if (supervisor.deptNo && this.deptNo && supervisor.deptNo.toString() !== this.deptNo.toString()) {
+      throw new Error('Supervisor must be in the same department');
+    }
+  }
+});
+
+employeeSchema.methods.hasCircularSupervision = async function() {
+  const visited = new Set();
+  let currentSsn = this.superSsn;
+  
+  while (currentSsn) {
+    if (visited.has(currentSsn) || currentSsn === this.ssn) {
+      return true;
+    }
+    
+    visited.add(currentSsn);
+    const supervisor = await this.constructor.findOne({ ssn: currentSsn });
+    
+    if (!supervisor) break;
+    currentSsn = supervisor.superSsn;
+  }
+  
+  return false;
+};
 
 export default mongoose.model('Employee', employeeSchema);
