@@ -1,284 +1,187 @@
-# Employee Management System API
+# GO Company Management System
 
-A RESTful API built with Node.js, Express, and MongoDB for managing employees, departments, projects, and dependents.
+A comprehensive REST API for managing company operations including employees, departments, projects, and work assignments.
 
-## 🚀 Features
+## Features
 
-- **CRUD Operations** for all resources (Employees, Departments, Projects, Dependents)
-- **Pagination** - Navigate through large datasets
-- **Sorting** - Order results by multiple fields
-- **Field Projection** - Select specific fields to return
-- **Data Validation** - Comprehensive input validation
-- **Error Handling** - Consistent error responses
-- **Database Indexes** - Optimized queries
+- **Employee Management**: CRUD operations with supervisor relationships and cascade deletion
+- **Department Management**: Track departments, managers, and locations
+- **Project Management**: Manage projects and employee assignments
+- **Work Assignments**: Track employee hours on projects
+- **Dependents**: Manage employee dependents with validation
+- **Authentication & Authorization**: JWT-based auth with role-based access control
+- **Reporting**: Advanced analytics and aggregations
+- **Data Integrity**: Automated orphaned data detection and validation
 
-## 📋 Prerequisites
+## Tech Stack
 
-- Node.js (v14 or higher)
-- MongoDB (v4.4 or higher)
-- npm or yarn
+- **Runtime**: Node.js
+- **Framework**: Express.js v5
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT & bcrypt
+- **Email**: Nodemailer
 
-## 🔧 Installation
+## Installation
 
-1. Clone the repository:
+1. Clone the repository
 ```bash
-git clone <your-repo-url>
-cd <project-folder>
+git clone <repository-url>
+cd go-company-api
 ```
 
-2. Install dependencies:
+2. Install dependencies
 ```bash
 npm install
 ```
 
-3. Create a `.env` file (optional):
+3. Configure environment variables
 ```bash
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/GO
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-4. Start MongoDB:
+4. Start the server
 ```bash
-mongod
-```
-
-5. Run the application:
-```bash
-# Development mode (with auto-restart)
+# Development mode
 npm run start:dev
 
 # Production mode
 npm run start:prod
 ```
 
-## 📚 API Endpoints
+## Environment Variables
+
+Required:
+- `MONGODB_URI` - MongoDB connection string
+- `JWT_SECRET` - Secret key for JWT (min 32 characters)
+
+Optional:
+- `PORT` - Server port (default: 3000)
+- `NODE_ENV` - Environment (development/production)
+- `JWT_EXPIRES_IN` - Token expiry (default: 7d)
+- `BCRYPT_ROUNDS` - Password hash rounds (default: 10)
+- Email configuration (for password reset)
+
+## API Endpoints
+
+### Authentication
+- `POST /users/signup` - Register new user
+- `POST /users/login` - User login
+- `POST /users/forgot-password` - Request password reset
+- `PATCH /users/reset-password/:token` - Reset password
+- `PATCH /users/update-password` - Update password (authenticated)
 
 ### Employees
-- `POST /employees` - Create a new employee
-- `GET /employees` - Get all employees
+- `GET /employees` - Get all employees (with pagination, sorting, projection)
 - `GET /employees/:id` - Get employee by ID
-- `PATCH /employees/:id` - Update employee
-- `DELETE /employees/:id` - Delete employee
+- `POST /employees` - Create employee (admin only)
+- `PATCH /employees/:id` - Update employee (admin only)
+- `DELETE /employees/:id` - Delete employee (admin only, supports `?cascade=true`)
 
 ### Departments
-- `POST /departments` - Create a new department
 - `GET /departments` - Get all departments
 - `GET /departments/:id` - Get department by ID
-- `PATCH /departments/:id` - Update department
-- `DELETE /departments/:id` - Delete department
+- `POST /departments` - Create department (admin only)
+- `PATCH /departments/:id` - Update department (admin only)
+- `DELETE /departments/:id` - Delete department (admin only)
 
 ### Projects
-- `POST /projects` - Create a new project
 - `GET /projects` - Get all projects
 - `GET /projects/:id` - Get project by ID
-- `PATCH /projects/:id` - Update project
-- `DELETE /projects/:id` - Delete project
+- `POST /projects` - Create project (admin only)
+- `PATCH /projects/:id` - Update project (admin only)
+- `DELETE /projects/:id` - Delete project (admin only)
+
+### Work Assignments
+- `GET /works-on` - Get all assignments
+- `GET /works-on/:id` - Get assignment by ID
+- `POST /works-on` - Assign employee to project (admin only)
+- `PATCH /works-on/:id` - Update assignment (admin only)
+- `DELETE /works-on/:id` - Delete assignment (admin only)
+- `GET /works-on/project/:projectId/employees` - Get employees on project
+- `GET /works-on/employee/:employeeId/projects` - Get employee's projects
 
 ### Dependents
-- `POST /dependents` - Create a new dependent
 - `GET /dependents` - Get all dependents
 - `GET /dependents/:id` - Get dependent by ID
-- `PATCH /dependents/:id` - Update dependent
-- `DELETE /dependents/:id` - Delete dependent
+- `POST /dependents` - Create dependent (admin only)
+- `PATCH /dependents/:id` - Update dependent (admin only)
+- `DELETE /dependents/:id` - Delete dependent (admin only)
 
-## 🔍 Query Parameters
+### Reports
+- `GET /reports/departments/stats` - Employee statistics by department
+- `GET /reports/departments/:id/summary` - Department summary
+- `GET /reports/projects/hours` - Total hours per project
+- `GET /reports/projects/unstaffed` - Projects without employees
+- `GET /reports/employees/hours` - Total hours per employee
+- `GET /reports/employees/without-supervisor` - Employees without supervisor
+- `GET /reports/employees/top-supervisors` - Top supervisors by subordinate count
 
-### Pagination
+### Admin
+- `GET /admin/check-integrity` - Check and report orphaned data
+
+### User Management (Admin Only)
+- `GET /users` - Get all users
+- `GET /users/:id` - Get user by ID
+- `PATCH /users/:id` - Update user
+- `DELETE /users/:id` - Delete user
+
+### Current User
+- `GET /users/me` - Get current user profile
+- `PATCH /users/me` - Update current user profile
+- `DELETE /users/me` - Deactivate current user account
+
+## Query Parameters
+
+All GET endpoints support:
+- `pageNumber` - Page number for pagination (default: 1)
+- `pageSize` - Items per page (default: 5)
+- `sort` - Sort fields (comma-separated, e.g., `salary,-name`)
+- `project` - Fields to include (comma-separated, e.g., `name,salary`)
+
+## Authentication
+
+Protected routes require a JWT token in the Authorization header:
 ```
-GET /employees?pageNumber=1&pageSize=10
-```
-- `pageNumber` - Page number (default: 1)
-- `pageSize` - Items per page (default: 10, max: 100)
-
-### Sorting
-```
-GET /employees?sort=salary,-bdate
-```
-Allowed sort combinations:
-- `salary,bdate`
-- `-salary,-bdate`
-- `salary,-bdate`
-- `-salary,bdate`
-
-Use `-` prefix for descending order.
-
-### Field Projection
-```
-GET /employees?project=name,salary,sex
-```
-Returns only the specified fields.
-
-## 📝 Request Examples
-
-### Create Employee
-```bash
-POST /employees
-Content-Type: application/json
-
-{
-  "ssn": "123-45-6789",
-  "name": {
-    "fname": "John",
-    "minit": "M",
-    "lname": "Doe"
-  },
-  "bdate": "1990-01-15",
-  "address": "123 Main St, City",
-  "sex": "Male",
-  "salary": 50000
-}
+Authorization: Bearer <your-jwt-token>
 ```
 
-### Create Department
-```bash
-POST /departments
-Content-Type: application/json
+## Error Handling
 
-{
-  "number": 1,
-  "name": "Research",
-  "locations": ["Cairo", "Alexandria"]
-}
-```
-
-### Create Project
-```bash
-POST /projects
-Content-Type: application/json
-
-{
-  "number": 1,
-  "name": "E-Commerce Platform",
-  "location": "Cairo"
-}
-```
-
-### Create Dependent
-```bash
-POST /dependents
-Content-Type: application/json
-
-{
-  "employeeId": "507f1f77bcf86cd799439011",
-  "name": "Jane Doe",
-  "sex": "Female",
-  "birthDate": "2015-03-20",
-  "relationship": "Daughter"
-}
-```
-
-## 🔐 Data Validation
-
-### Employee Constraints
-- `ssn` - Required, unique, trimmed
-- `name.fname` - Required
-- `name.lname` - Required
-- `name.minit` - Optional, max 1 character
-- `sex` - Must be "Male" or "Female"
-- `salary` - Required, minimum 0
-
-### Department Constraints
-- `number` - Required, unique
-- `name` - Required
-- `locations` - Array of strings
-
-### Project Constraints
-- `number` - Required, unique
-- `name` - Required
-- `location` - Optional
-
-### Dependent Constraints
-- `employeeId` - Required, must reference existing employee
-- `name` - Required
-- `sex` - Must be "Male" or "Female"
-- Unique combination of (employeeId, name)
-
-## ⚠️ Error Responses
-
-All errors follow a consistent format:
-
+The API uses consistent error responses:
 ```json
 {
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Error description",
-    "details": []
-  }
+  "status": "error",
+  "message": "Error description"
 }
 ```
 
-### Error Codes
-- `VALIDATION_ERROR` - Invalid input data
-- `NOT_FOUND` - Resource not found
-- `CONFLICT` - Duplicate key (409)
-- `BAD_REQUEST` - Invalid request format
-- `INTERNAL_ERROR` - Server error (500)
+Common HTTP status codes:
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request
+- `401` - Unauthorized
+- `403` - Forbidden
+- `404` - Not Found
+- `409` - Conflict
+- `500` - Internal Server Error
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
-project/
-├── src/
-│   ├── Controllers/
-│   │   ├── Emps.controller.js
-│   │   ├── Deps.controller.js
-│   │   ├── Projs.controller.js
-│   │   └── Departments.controller.js
-│   ├── Models/
-│   │   ├── Emps.model.js
-│   │   ├── Deps.model.js
-│   │   ├── Project.model.js
-│   │   └── Dependent.model.js
-│   ├── Routers/
-│   │   ├── Emps.router.js
-│   │   ├── Deps.router.js
-│   │   ├── Projs.router.js
-│   │   └── Dependents.router.js
-│   ├── middlewares/
-│   │   └── middleware.js
-│   └── utilities/
-│       └── ApiFeatures.js
-├── App.js
-├── server.js
-└── package.json
+├── Controllers/       # Request handlers
+├── Models/           # MongoDB schemas
+├── Routers/          # Route definitions
+├── Services/         # Business logic
+├── Config/           # Configuration files
+├── utilities/        # Helper functions
+├── App.js           # Express app setup
+└── server.js        # Server entry point
 ```
 
-## 🐛 Known Issues & Fixes
-
-### Fixed Issues:
-1. ✅ Typo in `Deps.controller.js` - Changed `req.pody` to `req.query`
-2. ✅ Missing `number` field in Project model
-3. ✅ Missing routes for Projects and Dependents in App.js
-4. ✅ Added global error handler
-5. ✅ Added 404 handler
-
-## 🧪 Testing
-
-You can test the API using:
-- **Postman** - Import the endpoints and test
-- **cURL** - Command line testing
-- **Thunder Client** - VS Code extension
-
-Example cURL:
-```bash
-# Get all employees
-curl http://localhost:3000/employees
-
-# Create employee
-curl -X POST http://localhost:3000/employees \
-  -H "Content-Type: application/json" \
-  -d '{"ssn":"123-45-6789","name":{"fname":"John","lname":"Doe"},"salary":50000,"sex":"Male"}'
-```
-
-## 📄 License
+## License
 
 ISC
 
-## 👥 Contributing
-
-Feel free to submit issues and enhancement requests!
-
----
-
-**Note**: Make sure MongoDB is running before starting the application.
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/Abdoxrs/GO_Company?utm_source=oss&utm_medium=github&utm_campaign=Abdoxrs%2FGO_Company&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+## Author
+ABDELRHMAN ATEF KH
