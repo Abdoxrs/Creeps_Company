@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO Company Database Schema - ER Diagram</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            er: {
+                useMaxWidth: true,
+                fontSize: 14,
+                entityPadding: 15,
+                stroke: '#333',
+                fill: '#f9f9f9',
+                minEntityWidth: 100,
+                minEntityHeight: 75
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .diagram-container {
+            background: #fafafa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .info-box {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #1976D2;
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .legend-item {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .legend-item strong {
+            color: #2196F3;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 150px;
+            margin: 10px;
+        }
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 GO Company Management System</h1>
+            <p>Complete Database Schema - Entity Relationship Diagram</p>
+            <p style="font-size: 0.9em;">MongoDB Collections with Mongoose ODM</p>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="number">6</span>
+                    <span class="label">Collections</span>
+                </div>
+                <div class="stat-card">
+                    <span class="number">8</span>
+                    <span class="label">Relationships</span>
+                </div>
+                <div class="stat-card">
+                    <span class="number">15+</span>
+                    <span class="label">Indexes</span>
+                </div>
+                <div class="stat-card">
+                    <span class="number">40+</span>
+                    <span class="label">Fields</span>
+                </div>
+            </div>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+erDiagram
+    USER {
+        ObjectId _id PK "Primary Key"
+        String email UK "Unique, Required"
+        String password "Hashed, Min 8 chars"
+        String role "Enum: admin, user"
+        Date passwordChangedAt "Optional"
+        String passwordResetToken "Optional"
+        Date passwordResetExpires "Optional"
+        Boolean active "Default true"
+        Date createdAt "Timestamp"
+        Date updatedAt "Timestamp"
+    }
+
+    EMPLOYEE {
+        ObjectId _id PK "Primary Key"
+        String ssn UK "Unique, Indexed"
+        Object name "fname+minit+lname"
+        Date bdate "Optional"
+        String address "Optional"
+        String sex "Enum: Male, Female"
+        Number salary "Min 0, Default 0"
+        ObjectId deptNo FK "To Department"
+        String superSsn FK "To Employee.ssn"
+        Date createdAt "Timestamp"
+        Date updatedAt "Timestamp"
+    }
+
+    DEPARTMENT {
+        ObjectId _id PK "Primary Key"
+        Number number UK "Unique, Required"
+        String name "Required"
+        Array locations "Array of Strings"
+        String mgrSsn FK "To Employee.ssn"
+        Date mgrStartDate "Cannot be future"
+        Date createdAt "Timestamp"
+        Date updatedAt "Timestamp"
+    }
+
+    PROJECT {
+        ObjectId _id PK "Primary Key"
+        Number number UK "Unique, Required"
+        String name "Required"
+        String location "Optional"
+        ObjectId controllingDept FK "To Department"
+        Date createdAt "Timestamp"
+        Date updatedAt "Timestamp"
+    }
+
+    DEPENDENT {
+        ObjectId _id PK "Primary Key"
+        ObjectId employeeId FK "To Employee, Indexed"
+        String name "Required"
+        String sex "Enum: Male, Female"
+        Date birthDate "Optional"
+        String relationship "Optional"
+    }
+
+    WORKSON {
+        ObjectId _id PK "Primary Key"
+        ObjectId employeeId FK "To Employee, Indexed"
+        ObjectId projectId FK "To Project, Indexed"
+        Number hours "Min 0, Max 168"
+        Date createdAt "Timestamp"
+        Date updatedAt "Timestamp"
+    }
+
+    EMPLOYEE }o--|| DEPARTMENT : "works_in"
+    EMPLOYEE ||--o{ EMPLOYEE : "supervises"
+    DEPARTMENT ||--|| EMPLOYEE : "managed_by"
+    EMPLOYEE ||--o{ DEPENDENT : "has_dependents"
+    EMPLOYEE ||--o{ WORKSON : "assigned_to"
+    PROJECT ||--o{ WORKSON : "has_workers"
+    DEPARTMENT ||--o{ PROJECT : "controls"
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>📊 Relationship Cardinalities</h3>
+                <div class="legend">
+                    <div class="legend-item">
+                        <strong>Employee → Department</strong>
+                        Many-to-One: Multiple employees work in one department
+                    </div>
+                    <div class="legend-item">
+                        <strong>Employee → Employee</strong>
+                        One-to-Many: One supervisor manages multiple employees (self-referencing)
+                    </div>
+                    <div class="legend-item">
+                        <strong>Department → Employee</strong>
+                        One-to-One: Each department has one manager
+                    </div>
+                    <div class="legend-item">
+                        <strong>Employee → Dependent</strong>
+                        One-to-Many: One employee has multiple dependents
+                    </div>
+                    <div class="legend-item">
+                        <strong>Employee ↔ Project</strong>
+                        Many-to-Many: Through WorksOn junction table
+                    </div>
+                    <div class="legend-item">
+                        <strong>Department → Project</strong>
+                        One-to-Many: One department controls multiple projects
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>🔒 Key Constraints</h3>
+                <div class="legend">
+                    <div class="legend-item">
+                        <strong>Unique Constraints</strong>
+                        USER.email, EMPLOYEE.ssn, DEPARTMENT.number, PROJECT.number, 
+                        Composite: (DEPENDENT.employeeId + name), (WORKSON.employeeId + projectId)
+                    </div>
+                    <div class="legend-item">
+                        <strong>Validation Rules</strong>
+                        • Employee cannot supervise self<br>
+                        • Supervisor must be in same department<br>
+                        • Manager must be employee in department<br>
+                        • Work hours: 0-168 per week<br>
+                        • Password: minimum 8 characters
+                    </div>
+                    <div class="legend-item">
+                        <strong>Cascade Operations</strong>
+                        • Delete Employee (with cascade) → Deletes Dependents<br>
+                        • Delete Employee (without cascade) → Fails if has Dependents
+                    </div>
+                    <div class="legend-item">
+                        <strong>Indexes</strong>
+                        EMPLOYEE: ssn, deptNo, superSsn<br>
+                        DEPARTMENT: mgrSsn<br>
+                        PROJECT: controllingDept<br>
+                        DEPENDENT: employeeId<br>
+                        WORKSON: employeeId, projectId
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>⚙️ Special Features</h3>
+                <div class="legend">
+                    <div class="legend-item">
+                        <strong>Virtual Fields</strong>
+                        • EMPLOYEE.fullName (computed)<br>
+                        • EMPLOYEE.subordinates (virtual populate)<br>
+                        • DEPARTMENT.employees (virtual populate)<br>
+                        • DEPARTMENT.projects (virtual populate)<br>
+                        • PROJECT.workers (virtual populate)
+                    </div>
+                    <div class="legend-item">
+                        <strong>Pre-Save Hooks</strong>
+                        • USER: Password hashing with bcrypt<br>
+                        • EMPLOYEE: Supervisor & circular reference validation<br>
+                        • DEPARTMENT: Manager validation<br>
+                        • WORKSON: Employee & Project existence check
+                    </div>
+                    <div class="legend-item">
+                        <strong>Security</strong>
+                        • Passwords: bcrypt hashed, select: false<br>
+                        • Reset tokens: SHA256 hashed<br>
+                        • Soft delete: active flag<br>
+                        • JWT authentication
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>GO Company Management System</strong> | Database Schema Documentation</p>
+            <p>6 Collections • 8 Relationships • Multiple Indexes • Complete Referential Integrity</p>
+        </div>
+    </div>
+</body>
+</html>
