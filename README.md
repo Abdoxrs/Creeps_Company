@@ -1,7 +1,7 @@
 [README.md](https://github.com/user-attachments/files/24963186/README.md)
 <div align="center">
 
-# 🚀 GO Company Management System  
+# 🚀 Creeps Company Management System  
 ### *Modern REST API for Enterprise Management*
 
 <img src="https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js">
