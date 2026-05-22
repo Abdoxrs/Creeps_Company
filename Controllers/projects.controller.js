@@ -7,6 +7,7 @@ import {
   updateProject,
   deleteProjectById
 } from '../Services/projects.service.js';
+import { deleteProjectAssignments } from '../Services/workson.service.js';
 
 const CreateProject = asyncHandler(async (req, res, next) => {
   const project = await createProject(req.body);
@@ -35,12 +36,16 @@ const UpdateProject = asyncHandler(async (req, res, next) => {
 });
 
 const DeleteProject = asyncHandler(async (req, res, next) => {
-  const deletedOne = await deleteProjectById(req.params.id);
-  if (!deletedOne) throw new ApiError('Project not found', 404);
+  const project = await getProjectById(req.params.id);
+  if (!project) throw new ApiError('Project not found', 404);
+  
+  await deleteProjectAssignments(req.params.id);
+  await deleteProjectById(req.params.id);
+  
   res.status(200).json({
     status: 'success',
     message: 'Project deleted successfully',
-    project: deletedOne
+    project
   });
 });
 

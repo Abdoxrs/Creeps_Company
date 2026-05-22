@@ -13,9 +13,13 @@ const getDepartments = (queryParams) => {
 
 const getDepartmentById = (id) => Department.findById(id);
 
-const updateDepartment = (id,updated) => {
-  return Department.findByIdAndUpdate(id,updated,{new: true, runValidators: true})
-}
+const updateDepartment = async (id, updated) => {
+  const department = await Department.findById(id);
+  if (!department) return null;
+  
+  Object.assign(department, updated);
+  return await department.save();
+};
 
 const deleteDepartments = () => Department.deleteMany({})
 

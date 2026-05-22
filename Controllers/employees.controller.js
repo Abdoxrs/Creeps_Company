@@ -1,5 +1,6 @@
 import ApiError from '../utilities/ApiError.js';
 import asyncHandler from '../utilities/asyncHandler.js';
+import mongoose from 'mongoose';
 import {
   createEmployee,
   getEmployees,
@@ -9,6 +10,7 @@ import {
   hasEmployeeDependents
 } from '../Services/employees.service.js';
 import { deleteDependentsByEmployeeId } from '../Services/dependents.service.js';
+import { deleteEmployeeAssignments } from '../Services/workson.service.js';
 
 const createEmp = asyncHandler(async (req, res) => {
   const employee = await createEmployee(req.body);
@@ -41,9 +43,19 @@ const deleteEmp = asyncHandler(async (req, res) => {
   if (!employee) throw new ApiError('Employee not found', 404);
   
   const cascade = req.query.cascade === 'true';
+  const EmployeeModel = mongoose.model('Employee');
+  const DepartmentModel = mongoose.model('Department');
   
   if (cascade) {
     await deleteDependentsByEmployeeId(req.params.id);
+    await deleteEmployeeAssignments(req.params.id);
+    
+    // Set subordinates' superSsn to null
+    await EmployeeModel.updateMany({ superSsn: employee.ssn }, { superSsn: null });
+    
+    // Set managed department's mgrSsn to null
+    await DepartmentModel.updateMany({ mgrSsn: employee.ssn }, { mgrSsn: null, mgrStartDate: null });
+    
     await deleteEmployeeById(req.params.id);
     
     res.status(200).json({
@@ -60,6 +72,14 @@ const deleteEmp = asyncHandler(async (req, res) => {
         409
       );
     }
+    
+    await deleteEmployeeAssignments(req.params.id);
+    
+    // Set subordinates' superSsn to null
+    await EmployeeModel.updateMany({ superSsn: employee.ssn }, { superSsn: null });
+    
+    // Set managed department's mgrSsn to null
+    await DepartmentModel.updateMany({ mgrSsn: employee.ssn }, { mgrSsn: null, mgrStartDate: null });
     
     await deleteEmployeeById(req.params.id);
     

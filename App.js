@@ -44,8 +44,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.all('{*path}', (req, res, next) => {
+app.all('*', (req, res, next) => {
   next(new ApiError(`Can't find ${req.originalUrl} on this server`, 404));
-});app.use(globalErrorHandler);
+});
+app.use(globalErrorHandler);
 
 export default app;

@@ -67,7 +67,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   }
   
   const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
+  await user.save();
   
   try {
     const resetURL = `${req.protocol}://${req.get('host')}/users/reset-password/${resetToken}`;
@@ -89,7 +89,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     console.error('forgotPassword: error sending email:', err);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
-    await user.save({ validateBeforeSave: false });
+    await user.save();
     
     throw new ApiError('There was an error sending the email. Try again later.', 500);
   }

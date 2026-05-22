@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     minlength: [8, 'Password must be at least 8 characters'],
     validate: {
       validator: function (value) {
-        return value === this.passwordConfirmation;
+        return !this.isModified('password') || value === this.passwordConfirmation;
       },
       message: 'Passwords do not match'
     }

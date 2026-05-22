@@ -1,5 +1,6 @@
 import ApiError from '../utilities/ApiError.js'
 import asyncHandler from '../utilities/asyncHandler.js';
+import mongoose from 'mongoose';
 import {
   createDepartment, 
   getDepartments, 
@@ -43,17 +44,31 @@ const UpdateDepartment = asyncHandler(async (req, res) => {
 });
 
 const DeleteDepartments = asyncHandler(async (req, res) => {
+  const Employee = mongoose.model('Employee');
+  await Employee.updateMany({}, { deptNo: null, superSsn: null });
+  
+  const Project = mongoose.model('Project');
+  await Project.updateMany({}, { controllingDept: null });
+
   const alldeleted = await deleteDepartments();
   res.status(200).json(alldeleted)
 });
 
 const DeleteOneDepartment = asyncHandler(async (req, res) => {
-  const deletedOne = await deleteDepartmentById(req.params.id);    
-  if (!deletedOne) throw new ApiError('Department not found', 404);
+  const department = await getDepartmentById(req.params.id);
+  if (!department) throw new ApiError('Department not found', 404);
+
+  const Employee = mongoose.model('Employee');
+  await Employee.updateMany({ deptNo: department._id }, { deptNo: null, superSsn: null });
+  
+  const Project = mongoose.model('Project');
+  await Project.updateMany({ controllingDept: department._id }, { controllingDept: null });
+
+  await deleteDepartmentById(req.params.id);    
   res.status(200).json({ 
     status: 'success',
     message: 'Department deleted successfully', 
-    department: deletedOne 
+    department
   });
 });
 

@@ -13,8 +13,12 @@ const getEmployees = (queryParams) => {
 
 const getEmployeeById = (id) => Employee.findById(id);
 
-const updateEmployee = (id, updated) => {
-  return Employee.findByIdAndUpdate(id, updated, { new: true, runValidators: true });
+const updateEmployee = async (id, updated) => {
+  const employee = await Employee.findById(id);
+  if (!employee) return null;
+  
+  Object.assign(employee, updated);
+  return await employee.save();
 };
 
 const deleteEmployeeById = (id) => Employee.findByIdAndDelete(id);

@@ -69,15 +69,21 @@ employeeSchema.virtual('subordinates', {
 
 
 employeeSchema.pre('save', async function() {
-  if (this.isModified('superSsn') && this.superSsn && this.deptNo) {
+  if ((this.isModified('superSsn') || this.isModified('deptNo')) && this.superSsn) {
     const supervisor = await this.constructor.findOne({ ssn: this.superSsn });
 
     if (!supervisor) {
       throw new Error('Supervisor does not exist');
     }
 
-    if (supervisor.deptNo && this.deptNo && supervisor.deptNo.toString() !== this.deptNo.toString()) {
+    if (this.deptNo && supervisor.deptNo && supervisor.deptNo.toString() !== this.deptNo.toString()) {
       throw new Error('Supervisor must be in the same department');
+    }
+  }
+
+  if (this.isModified('superSsn') && this.superSsn) {
+    if (await this.hasCircularSupervision()) {
+      throw new Error('Circular supervision detected: an employee cannot have a supervision loop');
     }
   }
 });
