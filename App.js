@@ -1,5 +1,6 @@
 import express, { json, urlencoded } from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 
 
 import departmentsRouter from './Routers/departments.router.js';
@@ -16,6 +17,8 @@ import ApiError from './utilities/ApiError.js';
 
 
 const app = express();
+
+app.use(cors());
 
 
 if (process.env.NODE_ENV === 'development') {
