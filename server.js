@@ -6,7 +6,7 @@ import connectDB from "./Config/DB.js";
 import validateEnv from "./utilities/validateEnv.js";
 
 validateEnv();
-
+// just testing
 const PORT = process.env.PORT || 3000;
 
 connectDB()
