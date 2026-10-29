@@ -1,12 +1,11 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config';
 
 import app from "./App.js";
 import connectDB from "./Config/DB.js";
 import validateEnv from "./utilities/validateEnv.js";
 
 validateEnv();
-// just testing
+
 const PORT = process.env.PORT || 3000;
 
 connectDB()
@@ -18,6 +17,6 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.error('❌ Error connecting to MongoDB:', err);
+    console.error('❌ Error connecting to MongoDB:', err.message || err);
     process.exit(1);
   });

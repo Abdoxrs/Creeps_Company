@@ -16,7 +16,7 @@ const validateEnv = () => {
     'EMAIL_FROM'
   ];
 
-  const missing = required.filter(varName => !process.env[varName]);
+  const missing = required.filter(varName => !process.env[varName] || process.env[varName].trim() === '');
 
   if (missing.length > 0) {
     console.error('❌ Missing required environment variables:');
@@ -25,7 +25,13 @@ const validateEnv = () => {
     process.exit(1);
   }
 
-  if (process.env.JWT_SECRET.length < 32) {
+  if (process.env.MONGODB_URI.includes('<db_username>') || process.env.MONGODB_URI.includes('<db_password>')) {
+    console.error('❌ MONGODB_URI still contains placeholders (<db_username> or <db_password>).');
+    console.error('   Please replace them with your actual Atlas database user credentials in .env.');
+    process.exit(1);
+  }
+
+  if (process.env.JWT_SECRET && process.env.JWT_SECRET.length < 32) {
     console.warn('⚠️  WARNING: JWT_SECRET should be at least 32 characters long');
   }
   

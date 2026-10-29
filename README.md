@@ -74,14 +74,24 @@ cd go-company-api
 npm install
 ```
 
-## 🌳 Create .env file
+## 🌳 Configure MongoDB Atlas
+
+1. Create a MongoDB Atlas database user and cluster.
+2. Add the IP address of the machine running the API to Atlas Network Access.
+3. Copy `.env.example` to `.env` and replace the Atlas URI placeholders with your cluster host and database user credentials. URL-encode special characters in the username or password.
+4. Keep `.env` private; never commit your database credentials.
+
+The URI should include the database name, for example:
+
 ```env
-MONGODB_URI=your_connection_string
-JWT_SECRET=your_super_secret_key
+MONGODB_URI=mongodb+srv://<db_username>:<db_password>@<cluster-host>/GO?retryWrites=true&w=majority
 ```
 
 ## 🚀 Run Project
 ```bash
+# Test Database Connection
+npm run test:db
+
 # Development
 npm run start:dev
 
