@@ -89,8 +89,18 @@ MONGODB_URI=mongodb+srv://<db_username>:<db_password>@<cluster-host>/GO?retryWri
 
 ## 🚀 Run Project
 ```bash
-# Test Database Connection
+# 1. Test Database Connection
 npm run test:db
+
+# 2. Seed Initial Demo Data (Admin user, departments, projects)
+npm run seed
+
+# 3. Run Full-Stack (Backend API on :3000 + Frontend on :5173 concurrently)
+npm run dev
+
+# 4. Or Run Separately
+# Frontend only (http://localhost:5173)
+npm run client
 
 # Development
 npm run start:dev

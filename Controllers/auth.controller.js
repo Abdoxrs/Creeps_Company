@@ -34,7 +34,7 @@ export const signup = asyncHandler(async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirmation: req.body.passwordConfirmation,
-    role: req.body.role
+    role: ((await User.countDocuments()) === 0) ? 'admin' : (req.body.role || 'user')
   });
   
   createSendToken(newUser, 201, res, 'User created successfully');
